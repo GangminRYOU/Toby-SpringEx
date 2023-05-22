@@ -48,9 +48,34 @@ public class ConnectionChecker {
 			System.out.println(str + str2 + str3);
 		}
 	}
+
+public void update() throws SQLException, ClassNotFoundException{
+	Class.forName("com.mysql.cj.jdbc.Driver");
+	Connection con = DriverManager.getConnection("jdbc:mysql://ec2-35-175-124-83.compute-1.amazonaws.com/spring-db", "root", "12345678");
+	Statement st = con.createStatement();
+	PreparedStatement pstmt = con.prepareStatement("UPDATE users SET name=? WHERE id=?");
+	pstmt.setString(1, "GangminRYOU");
+	pstmt.setString(2, "1");
+	pstmt.executeUpdate();
+	}
+
+	public void delete() throws SQLException, ClassNotFoundException{
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		Connection con = DriverManager.getConnection("jdbc:mysql://ec2-35-175-124-83.compute-1.amazonaws.com/spring-db", "root", "12345678");
+		Statement st = con.createStatement();
+		PreparedStatement pstmt = con.prepareStatement("DELETE from users WHERE id=?");
+		pstmt.setString(1, "1");
+		pstmt.executeUpdate();
+	}
+
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		ConnectionChecker cc = new ConnectionChecker();
 		cc.check();
-		cc.add();
+		//cc.add();
+		cc.select();
+		cc.update();
+		cc.select();
+		cc.delete();
+		cc.select();
 	}
 }
