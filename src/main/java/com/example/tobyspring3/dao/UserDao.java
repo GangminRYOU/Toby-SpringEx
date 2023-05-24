@@ -53,7 +53,7 @@ public class UserDao {
 		user.setId("3");
 		user.setName("EunJeong");
 		user.setPassword("13242345");
-		//ud.add(user);
+		ud.add(user);
 		user = ud.get("3");
 		out.println(user.getId());
 		out.println(user.getName());
