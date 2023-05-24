@@ -10,13 +10,16 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import com.example.tobyspring3.domain.User;
+import com.mysql.cj.util.DnsSrv;
 
 public class UserDao {
 
-	SimpleConnectionMaker connectionMaker = new SimpleConnectionMaker();
-
+	ConnectionMaker connectionMaker;
+	public UserDao(ConnectionMaker connectionMaker){
+		this.connectionMaker = connectionMaker;
+	}
 	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection conn = connectionMaker.makeNewConnection();
+		Connection conn = connectionMaker.makeConnection();
 		PreparedStatement pstmt = conn.prepareStatement("insert into users (id, name, password) values(?, ?, ?)");
 		pstmt.setString(1, user.getId());
 		pstmt.setString(2, user.getName());
@@ -26,7 +29,7 @@ public class UserDao {
 		pstmt.close();
 	}
 	public User get(String id) throws SQLException, ClassNotFoundException {
-		Connection conn = connectionMaker.makeNewConnection();
+		Connection conn = connectionMaker.makeConnection();
 		PreparedStatement pstmt = conn.prepareStatement("select id, name, password from users where id=?");
 		pstmt.setString(1, id);
 		//select이기 때문에 결과값
@@ -43,13 +46,14 @@ public class UserDao {
 	}
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
-		UserDao ud = new UserDao();
+		ConnectionMaker connectionMaker1 = new DConnectionMaker();
+		UserDao ud = new UserDao(connectionMaker1);
 		User user = new User();
-		user.setId("5");
-		user.setName("Sumok");
+		user.setId("7");
+		user.setName("Minsu");
 		user.setPassword("1231235");
 		ud.add(user);
-		user = ud.get("5");
+		user = ud.get("6");
 		out.println(user.getId());
 		out.println(user.getName());
 		out.println(user.getPassword());
