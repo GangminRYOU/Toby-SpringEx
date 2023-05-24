@@ -11,17 +11,12 @@ import java.util.Map;
 
 import com.example.tobyspring3.domain.User;
 
-public abstract class UserDao {
-	public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
-		// Map<String, String> env = getenv();
-		// String dbHost = env.get("DB_HOST");
-		// String dbUser = env.get("DB_USER");
-		// String dbPassword = env.get("DB_PASSWORD");
-		// Class.forName("com.mysql.cj.jdbc.Driver");
-		// return DriverManager.getConnection(dbHost, dbUser, dbPassword);
+public class UserDao {
+
+	SimpleConnectionMaker connectionMaker = new SimpleConnectionMaker();
 
 	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection conn = getConnection();
+		Connection conn = connectionMaker.makeNewConnection();
 		PreparedStatement pstmt = conn.prepareStatement("insert into users (id, name, password) values(?, ?, ?)");
 		pstmt.setString(1, user.getId());
 		pstmt.setString(2, user.getName());
@@ -31,7 +26,7 @@ public abstract class UserDao {
 		pstmt.close();
 	}
 	public User get(String id) throws SQLException, ClassNotFoundException {
-		Connection conn = getConnection();
+		Connection conn = connectionMaker.makeNewConnection();
 		PreparedStatement pstmt = conn.prepareStatement("select id, name, password from users where id=?");
 		pstmt.setString(1, id);
 		//select이기 때문에 결과값
@@ -48,13 +43,13 @@ public abstract class UserDao {
 	}
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
-		UserDao ud = new NUserDao();
+		UserDao ud = new UserDao();
 		User user = new User();
-		user.setId("1");
-		user.setName("Gangmin");
-		user.setPassword("11242345");
-		//ud.add(user);
-		user = ud.get("1");
+		user.setId("5");
+		user.setName("Sumok");
+		user.setPassword("1231235");
+		ud.add(user);
+		user = ud.get("5");
 		out.println(user.getId());
 		out.println(user.getName());
 		out.println(user.getPassword());
